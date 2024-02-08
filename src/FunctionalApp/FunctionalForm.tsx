@@ -1,6 +1,8 @@
-import { useRef, useState } from 'react';
+import { MutableRefObject, useRef, useState } from 'react';
 import { ErrorMessage } from '../ErrorMessage';
 import { UserInformation } from '../types';
+import { capitalize } from '../utils/transformations';
+import { isEmailValid, isNameValid } from '../utils/validations';
 
 const firstNameErrorMessage =
 	'First name must be at least 2 characters long';
@@ -15,20 +17,24 @@ type THandleUserInfo = {
 };
 
 export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
-	const firstNameRef = useRef(null);
-	const lastNameRef = useRef(null);
-	const emailRef = useRef(null);
-	const cityRef = useRef(null);
-	const phoneNumber1Ref = useRef(null);
-	const phoneNumber2Ref = useRef(null);
-	const phoneNumber3Ref = useRef(null);
-	const phoneNumber4Ref = useRef(null);
+	const firstNameRef = useRef<HTMLInputElement>(null);
+	const lastNameRef = useRef<HTMLInputElement>(null);
+	const emailRef = useRef<HTMLInputElement>(null);
+	const cityRef = useRef<HTMLInputElement>(null);
+	const phoneNumber1Ref = useRef<HTMLInputElement>(null);
+	const phoneNumber2Ref = useRef<HTMLInputElement>(null);
+	const phoneNumber3Ref = useRef<HTMLInputElement>(null);
+	const phoneNumber4Ref = useRef<HTMLInputElement>(null);
 	const [isSubmitted, setIsSubmitted] = useState(false);
-
+	
+	
+	
 	return (
 		<form
 			onSubmit={(e) => {
 				e.preventDefault();
+				firstNameRef.current !== null ? capitalize(firstNameRef.current.value) : null
+				firstNameRef.current !== null ? console.log(isNameValid(capitalize(firstNameRef.current.value))) : null
 			}}>
 			<u>
 				<h3>User Information Form</h3>
@@ -41,11 +47,15 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 					ref={firstNameRef}
 					placeholder='Bilbo'
 				/>
+				
 			</div>
-			<ErrorMessage
+			{isSubmitted ? (
+				<ErrorMessage
 				message={firstNameErrorMessage}
 				show={true}
 			/>
+			) : (null)}
+			
 
 			{/* last name input */}
 			<div className='input-wrap'>
@@ -55,10 +65,13 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 					placeholder='Baggins'
 				/>
 			</div>
-			<ErrorMessage
+			{isSubmitted ? (
+				<ErrorMessage
 				message={lastNameErrorMessage}
 				show={true}
 			/>
+			) : (null)}
+			
 
 			{/* Email Input */}
 			<div className='input-wrap'>
@@ -68,10 +81,13 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 					placeholder='bilbo-baggins@adventurehobbits.net'
 				/>
 			</div>
-			<ErrorMessage
+			{isSubmitted && !isEmailValid(emailRef.current!.value) ? (
+				<ErrorMessage
 				message={emailErrorMessage}
 				show={true}
-			/>
+				/>
+			) : (null)}
+			
 
 			{/* City Input */}
 			<div className='input-wrap'>
@@ -81,10 +97,13 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 					placeholder='Hobbiton'
 				/>
 			</div>
-			<ErrorMessage
+			{isSubmitted ? (
+				<ErrorMessage
 				message={cityErrorMessage}
 				show={true}
-			/>
+				/>
+			) : (null)}
+			
 
 			<div className='input-wrap'>
 				<label htmlFor='phone'>Phone:</label>
@@ -119,10 +138,13 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 				</div>
 			</div>
 
-			<ErrorMessage
+			{isSubmitted ? (
+				<ErrorMessage
 				message={phoneNumberErrorMessage}
 				show={true}
 			/>
+			) : (null)}
+			
 
 			<input
 				type='submit'
