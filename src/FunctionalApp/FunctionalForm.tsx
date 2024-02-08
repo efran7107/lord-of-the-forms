@@ -26,15 +26,19 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 	const phoneNumber3Ref = useRef<HTMLInputElement>(null);
 	const phoneNumber4Ref = useRef<HTMLInputElement>(null);
 	const [isSubmitted, setIsSubmitted] = useState(false);
-	
-	
-	
+
+	const [firstName, setFirstName] = useState('');
+	const [lastName, setLastName] = useState('');
+	const [email, setEmail] = useState('');
+	const [city, setCity] = useState('');
+	const [phoneNumber, setPhoneNumber] = useState(['', '', '', '']);
+
 	return (
 		<form
 			onSubmit={(e) => {
 				e.preventDefault();
-				firstNameRef.current !== null ? capitalize(firstNameRef.current.value) : null
-				firstNameRef.current !== null ? console.log(isNameValid(capitalize(firstNameRef.current.value))) : null
+				setIsSubmitted(true);
+				firstNameRef.current ? setFirstName(firstNameRef.current.value) : null;
 			}}>
 			<u>
 				<h3>User Information Form</h3>
@@ -47,16 +51,13 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 					ref={firstNameRef}
 					placeholder='Bilbo'
 				/>
-				
 			</div>
-			{isSubmitted ? (
+			{isSubmitted && !isNameValid(firstName) ? (
 				<ErrorMessage
-				message={firstNameErrorMessage}
-				show={true}
-			/>
-			) : (null)}
-			
-
+					message={firstNameErrorMessage}
+					show={true}
+				/>
+			) : null}
 			{/* last name input */}
 			<div className='input-wrap'>
 				<label>{'Last Name'}:</label>
@@ -67,11 +68,10 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 			</div>
 			{isSubmitted ? (
 				<ErrorMessage
-				message={lastNameErrorMessage}
-				show={true}
-			/>
-			) : (null)}
-			
+					message={lastNameErrorMessage}
+					show={true}
+				/>
+			) : null}
 
 			{/* Email Input */}
 			<div className='input-wrap'>
@@ -83,11 +83,10 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 			</div>
 			{isSubmitted && !isEmailValid(emailRef.current!.value) ? (
 				<ErrorMessage
-				message={emailErrorMessage}
-				show={true}
+					message={emailErrorMessage}
+					show={true}
 				/>
-			) : (null)}
-			
+			) : null}
 
 			{/* City Input */}
 			<div className='input-wrap'>
@@ -99,11 +98,10 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 			</div>
 			{isSubmitted ? (
 				<ErrorMessage
-				message={cityErrorMessage}
-				show={true}
+					message={cityErrorMessage}
+					show={true}
 				/>
-			) : (null)}
-			
+			) : null}
 
 			<div className='input-wrap'>
 				<label htmlFor='phone'>Phone:</label>
@@ -140,11 +138,10 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 
 			{isSubmitted ? (
 				<ErrorMessage
-				message={phoneNumberErrorMessage}
-				show={true}
-			/>
-			) : (null)}
-			
+					message={phoneNumberErrorMessage}
+					show={true}
+				/>
+			) : null}
 
 			<input
 				type='submit'
