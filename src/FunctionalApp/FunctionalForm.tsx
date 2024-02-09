@@ -1,13 +1,11 @@
-import { MutableRefObject, useRef, useState } from 'react';
+import { MutableRefObject, isValidElement, useRef, useState } from 'react';
 import { ErrorMessage } from '../ErrorMessage';
 import { UserInformation } from '../types';
 import { capitalize } from '../utils/transformations';
-import { isEmailValid, isNameValid } from '../utils/validations';
+import { isEmailValid, isNameValid, isValidCity } from '../utils/validations';
 
-const firstNameErrorMessage =
-	'First name must be at least 2 characters long';
-const lastNameErrorMessage =
-	'Last name must be at least 2 characters long';
+const firstNameErrorMessage = 'First name must be at least 2 characters long';
+const lastNameErrorMessage = 'Last name must be at least 2 characters long';
 const emailErrorMessage = 'Email is Invalid';
 const cityErrorMessage = 'State is Invalid';
 const phoneNumberErrorMessage = 'Invalid Phone Number';
@@ -38,7 +36,13 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 			onSubmit={(e) => {
 				e.preventDefault();
 				setIsSubmitted(true);
-				firstNameRef.current ? setFirstName(firstNameRef.current.value) : null;
+				firstNameRef.current !== null ? setFirstName(firstNameRef.current.value) : null;
+				lastNameRef.current !== null ? setLastName(lastNameRef.current.value) : null;
+				emailRef.current !== null ? setEmail(emailRef.current.value) : null;
+				cityRef.current !== null ? setCity(cityRef.current.value) : null;
+				phoneNumber1Ref.current !== null && phoneNumber2Ref.current !== null && phoneNumber3Ref.current !== null && phoneNumber4Ref.current !== null
+					? setPhoneNumber([phoneNumber1Ref.current.value, phoneNumber2Ref.current.value, phoneNumber3Ref.current.value, phoneNumber4Ref.current.value])
+					: null;
 			}}>
 			<u>
 				<h3>User Information Form</h3>
@@ -66,7 +70,7 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 					placeholder='Baggins'
 				/>
 			</div>
-			{isSubmitted ? (
+			{isSubmitted && !isNameValid(lastName) ? (
 				<ErrorMessage
 					message={lastNameErrorMessage}
 					show={true}
@@ -81,7 +85,7 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 					placeholder='bilbo-baggins@adventurehobbits.net'
 				/>
 			</div>
-			{isSubmitted && !isEmailValid(emailRef.current!.value) ? (
+			{isSubmitted && !isEmailValid(email) ? (
 				<ErrorMessage
 					message={emailErrorMessage}
 					show={true}
@@ -96,7 +100,7 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 					placeholder='Hobbiton'
 				/>
 			</div>
-			{isSubmitted ? (
+			{isSubmitted && isValidCity(city) === false ? (
 				<ErrorMessage
 					message={cityErrorMessage}
 					show={true}
