@@ -3,5 +3,5 @@ export type UserInformation = {
 	lastName: string;
 	email: string;
 	city: string;
-	phone: Array<string>;
+	phone: string;
 };

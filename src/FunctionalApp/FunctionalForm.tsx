@@ -1,8 +1,9 @@
-import { MutableRefObject, isValidElement, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { ErrorMessage } from '../ErrorMessage';
 import { UserInformation } from '../types';
-import { capitalize } from '../utils/transformations';
-import { isEmailValid, isNameValid, isValidCity } from '../utils/validations';
+import { isAllValid, isEmailValid, isNameValid, isValidCity, isValidPhoneNumber } from '../utils/validations';
+import { switchInput } from '../ts-functions/functions';
+import { capitalize, formatPhoneNumber } from '../utils/transformations';
 
 const firstNameErrorMessage = 'First name must be at least 2 characters long';
 const lastNameErrorMessage = 'Last name must be at least 2 characters long';
@@ -14,7 +15,7 @@ type THandleUserInfo = {
 	handleUserInfo: (userInfo: UserInformation) => void;
 };
 
-export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
+export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 	const firstNameRef = useRef<HTMLInputElement>(null);
 	const lastNameRef = useRef<HTMLInputElement>(null);
 	const emailRef = useRef<HTMLInputElement>(null);
@@ -24,6 +25,7 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 	const phoneNumber3Ref = useRef<HTMLInputElement>(null);
 	const phoneNumber4Ref = useRef<HTMLInputElement>(null);
 	const [isSubmitted, setIsSubmitted] = useState(false);
+	const phoneNumberRefs = [phoneNumber1Ref, phoneNumber2Ref, phoneNumber3Ref, phoneNumber4Ref];
 
 	const [firstName, setFirstName] = useState('');
 	const [lastName, setLastName] = useState('');
@@ -43,6 +45,42 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 				phoneNumber1Ref.current !== null && phoneNumber2Ref.current !== null && phoneNumber3Ref.current !== null && phoneNumber4Ref.current !== null
 					? setPhoneNumber([phoneNumber1Ref.current.value, phoneNumber2Ref.current.value, phoneNumber3Ref.current.value, phoneNumber4Ref.current.value])
 					: null;
+
+				if (
+					firstNameRef.current !== null &&
+					lastNameRef.current !== null &&
+					emailRef.current !== null &&
+					cityRef.current !== null &&
+					phoneNumber1Ref.current !== null &&
+					phoneNumber2Ref.current !== null &&
+					phoneNumber3Ref.current !== null &&
+					phoneNumber4Ref.current !== null
+				) {
+					if (
+						isAllValid(firstNameRef.current.value, lastNameRef.current.value, emailRef.current.value, cityRef.current.value, [
+							phoneNumber1Ref.current.value,
+							phoneNumber2Ref.current.value,
+							phoneNumber3Ref.current.value,
+							phoneNumber4Ref.current.value,
+						]) === true
+					) {
+						handleUserInfo({
+							firstName: capitalize(firstNameRef.current.value),
+							lastName: capitalize(lastNameRef.current.value),
+							email: emailRef.current.value,
+							city: capitalize(cityRef.current.value),
+							phone: formatPhoneNumber([phoneNumber1Ref.current.value, phoneNumber2Ref.current.value, phoneNumber3Ref.current.value, phoneNumber4Ref.current.value]),
+						});
+						firstNameRef.current.value = '';
+						lastNameRef.current.value = '';
+						emailRef.current.value = '';
+						cityRef.current.value = '';
+						phoneNumber1Ref.current.value = '';
+						phoneNumber2Ref.current.value = '';
+						phoneNumber3Ref.current.value = '';
+						phoneNumber4Ref.current.value = '';
+					}
+				}
 			}}>
 			<u>
 				<h3>User Information Form</h3>
@@ -115,6 +153,10 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 						type='text'
 						id='phone-input-1'
 						placeholder='55'
+						onChange={() => {
+							switchInput(phoneNumber1Ref, phoneNumberRefs);
+						}}
+						maxLength={2}
 					/>
 					-
 					<input
@@ -122,6 +164,10 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 						type='text'
 						id='phone-input-2'
 						placeholder='55'
+						onChange={() => {
+							switchInput(phoneNumber2Ref, phoneNumberRefs);
+						}}
+						maxLength={2}
 					/>
 					-
 					<input
@@ -129,6 +175,10 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 						type='text'
 						id='phone-input-3'
 						placeholder='55'
+						onChange={() => {
+							switchInput(phoneNumber3Ref, phoneNumberRefs);
+						}}
+						maxLength={2}
 					/>
 					-
 					<input
@@ -136,11 +186,15 @@ export const FunctionalForm = (handleUserInfo: THandleUserInfo) => {
 						type='text'
 						id='phone-input-4'
 						placeholder='5'
+						onChange={() => {
+							switchInput(phoneNumber4Ref, phoneNumberRefs);
+						}}
+						maxLength={1}
 					/>
 				</div>
 			</div>
 
-			{isSubmitted ? (
+			{isSubmitted && isValidPhoneNumber(phoneNumber) === false ? (
 				<ErrorMessage
 					message={phoneNumberErrorMessage}
 					show={true}
