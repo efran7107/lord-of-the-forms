@@ -5,5 +5,5 @@ export const defaultInformation: UserInformation = {
 	lastName: 'Default',
 	email: 'default@default',
 	city: 'default',
-	phone: ['12', '34', '56', '7'],
+	phone: '12-34-56-7',
 };

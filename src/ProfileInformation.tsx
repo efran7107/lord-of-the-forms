@@ -1,12 +1,7 @@
 import { UserInformation } from './types';
+import { formatPhoneNumber } from './utils/transformations';
 
-export const InfoRow = ({
-	label,
-	value,
-}: {
-	label: string;
-	value: string;
-}) => {
+export const InfoRow = ({ label, value }: { label: string; value: string }) => {
 	return (
 		<div>
 			<span style={{ marginRight: 5 }}>
@@ -16,11 +11,7 @@ export const InfoRow = ({
 		</div>
 	);
 };
-export const ProfileInformation = ({
-	userData,
-}: {
-	userData: UserInformation | null;
-}) => {
+export const ProfileInformation = ({ userData }: { userData: UserInformation | null }) => {
 	if (!userData) {
 		return (
 			<>

@@ -5,20 +5,16 @@ import { ProfileInformation } from '../ProfileInformation';
 import { defaultInformation } from '../ts-functions/defaultInformation';
 type State = { userInformation: UserInformation | null };
 
-const defaultUser = defaultInformation;
-
 export class ClassApp extends Component<Record<string, never>, State> {
+	state: State = {
+		userInformation: defaultInformation,
+	};
 	render() {
+		const { userInformation } = this.state;
 		return (
 			<>
 				<h2>Class</h2>
-				<ProfileInformation
-					userData={
-						// toggle the following lines to change
-						// null
-						defaultUser
-					}
-				/>
+				<ProfileInformation userData={userInformation} />
 				<ClassForm />
 			</>
 		);
