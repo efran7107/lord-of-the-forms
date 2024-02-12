@@ -8,6 +8,6 @@ export const switchInput = (phoneRef: RefObject<HTMLInputElement>, refArr: RefOb
 	}
 };
 
-export const addToState = (phoneRef: RefObject<HTMLInputElement>): boolean => {
-	return phoneRef.current?.value.length === phoneRef.current?.maxLength;
-};
+// export const addToState = (phoneRef: RefObject<HTMLInputElement>): boolean => {
+// 	return phoneRef.current?.value.length === phoneRef.current?.maxLength;
+// };

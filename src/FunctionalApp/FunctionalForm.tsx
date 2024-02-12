@@ -37,25 +37,24 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 		<form
 			onSubmit={(e) => {
 				e.preventDefault();
-				setIsSubmitted(true);
-				firstNameRef.current !== null ? setFirstName(firstNameRef.current.value) : null;
-				lastNameRef.current !== null ? setLastName(lastNameRef.current.value) : null;
-				emailRef.current !== null ? setEmail(emailRef.current.value) : null;
-				cityRef.current !== null ? setCity(cityRef.current.value) : null;
-				phoneNumber1Ref.current !== null && phoneNumber2Ref.current !== null && phoneNumber3Ref.current !== null && phoneNumber4Ref.current !== null
-					? setPhoneNumber([phoneNumber1Ref.current.value, phoneNumber2Ref.current.value, phoneNumber3Ref.current.value, phoneNumber4Ref.current.value])
-					: null;
-
 				if (
-					firstNameRef.current !== null &&
-					lastNameRef.current !== null &&
-					emailRef.current !== null &&
-					cityRef.current !== null &&
-					phoneNumber1Ref.current !== null &&
-					phoneNumber2Ref.current !== null &&
-					phoneNumber3Ref.current !== null &&
-					phoneNumber4Ref.current !== null
+					firstNameRef.current &&
+					lastNameRef.current &&
+					emailRef.current &&
+					cityRef.current &&
+					phoneNumber1Ref.current &&
+					phoneNumber2Ref.current &&
+					phoneNumber3Ref.current &&
+					phoneNumber4Ref.current
 				) {
+					setIsSubmitted(true);
+					firstNameRef.current ? setFirstName(firstNameRef.current.value) : null;
+					lastNameRef.current ? setLastName(lastNameRef.current.value) : null;
+					emailRef.current ? setEmail(emailRef.current.value) : null;
+					cityRef.current ? setCity(cityRef.current.value) : null;
+					phoneNumber1Ref.current && phoneNumber2Ref.current && phoneNumber3Ref.current && phoneNumber4Ref.current
+						? setPhoneNumber([phoneNumber1Ref.current.value, phoneNumber2Ref.current.value, phoneNumber3Ref.current.value, phoneNumber4Ref.current.value])
+						: null;
 					if (
 						isAllValid(firstNameRef.current.value, lastNameRef.current.value, emailRef.current.value, cityRef.current.value, [
 							phoneNumber1Ref.current.value,
@@ -71,15 +70,15 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 							city: capitalize(cityRef.current.value),
 							phone: formatPhoneNumber([phoneNumber1Ref.current.value, phoneNumber2Ref.current.value, phoneNumber3Ref.current.value, phoneNumber4Ref.current.value]),
 						});
-						firstNameRef.current.value = '';
-						lastNameRef.current.value = '';
-						emailRef.current.value = '';
-						cityRef.current.value = '';
-						phoneNumber1Ref.current.value = '';
-						phoneNumber2Ref.current.value = '';
-						phoneNumber3Ref.current.value = '';
-						phoneNumber4Ref.current.value = '';
 					}
+					firstNameRef.current.value = '';
+					lastNameRef.current.value = '';
+					emailRef.current.value = '';
+					cityRef.current.value = '';
+					phoneNumber1Ref.current.value = '';
+					phoneNumber2Ref.current.value = '';
+					phoneNumber3Ref.current.value = '';
+					phoneNumber4Ref.current.value = '';
 				}
 			}}>
 			<u>
