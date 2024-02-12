@@ -3,6 +3,7 @@ import { ErrorMessage } from '../ErrorMessage';
 import { isAllValid, isEmailValid, isNameValid, isValidCity, isValidPhoneNumber } from '../utils/validations';
 import { switchInput } from '../ts-functions/functions';
 import { UserInformation } from '../types';
+import { capitalize, formatPhoneNumber } from '../utils/transformations';
 
 const firstNameErrorMessage = 'First name must be at least 2 characters long';
 const lastNameErrorMessage = 'Last name must be at least 2 characters long';
@@ -49,11 +50,11 @@ export class ClassForm extends Component<{ handleInformation: (userInfo: UserInf
 						phoneNumberRef4.current
 					) {
 						this.setState({
-							firstName: firstNameRef.current.value,
-							lastName: lastNameRef.current.value,
+							firstName: capitalize(firstNameRef.current.value),
+							lastName: capitalize(lastNameRef.current.value),
 							email: emailRef.current.value,
-							city: cityRef.current.value,
-							phoneNumber: [phoneNumberRef1.current.value, phoneNumberRef2.current.value, phoneNumberRef3.current.value, phoneNumberRef4.current.value],
+							city: capitalize(cityRef.current.value),
+							phoneNumber: formatPhoneNumber([phoneNumberRef1.current.value, phoneNumberRef2.current.value, phoneNumberRef3.current.value, phoneNumberRef4.current.value]),
 							hasSubmitted: true,
 						});
 						if (

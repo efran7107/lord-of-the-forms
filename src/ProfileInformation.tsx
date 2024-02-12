@@ -1,5 +1,4 @@
 import { UserInformation } from './types';
-import { formatPhoneNumber } from './utils/transformations';
 
 export const InfoRow = ({ label, value }: { label: string; value: string }) => {
 	return (
