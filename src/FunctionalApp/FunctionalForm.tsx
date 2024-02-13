@@ -16,16 +16,7 @@ type THandleUserInfo = {
 };
 
 export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
-	const firstNameRef = useRef<HTMLInputElement>(null);
-	const lastNameRef = useRef<HTMLInputElement>(null);
-	const emailRef = useRef<HTMLInputElement>(null);
-	const cityRef = useRef<HTMLInputElement>(null);
-	const phoneNumber1Ref = useRef<HTMLInputElement>(null);
-	const phoneNumber2Ref = useRef<HTMLInputElement>(null);
-	const phoneNumber3Ref = useRef<HTMLInputElement>(null);
-	const phoneNumber4Ref = useRef<HTMLInputElement>(null);
 	const [isSubmitted, setIsSubmitted] = useState(false);
-	const phoneNumberRefs = [phoneNumber1Ref, phoneNumber2Ref, phoneNumber3Ref, phoneNumber4Ref];
 
 	const [firstName, setFirstName] = useState('');
 	const [lastName, setLastName] = useState('');
@@ -37,49 +28,6 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 		<form
 			onSubmit={(e) => {
 				e.preventDefault();
-				if (
-					firstNameRef.current &&
-					lastNameRef.current &&
-					emailRef.current &&
-					cityRef.current &&
-					phoneNumber1Ref.current &&
-					phoneNumber2Ref.current &&
-					phoneNumber3Ref.current &&
-					phoneNumber4Ref.current
-				) {
-					setIsSubmitted(true);
-					firstNameRef.current ? setFirstName(firstNameRef.current.value) : null;
-					lastNameRef.current ? setLastName(lastNameRef.current.value) : null;
-					emailRef.current ? setEmail(emailRef.current.value) : null;
-					cityRef.current ? setCity(cityRef.current.value) : null;
-					phoneNumber1Ref.current && phoneNumber2Ref.current && phoneNumber3Ref.current && phoneNumber4Ref.current
-						? setPhoneNumber([phoneNumber1Ref.current.value, phoneNumber2Ref.current.value, phoneNumber3Ref.current.value, phoneNumber4Ref.current.value])
-						: null;
-					if (
-						isAllValid(firstNameRef.current.value, lastNameRef.current.value, emailRef.current.value, cityRef.current.value, [
-							phoneNumber1Ref.current.value,
-							phoneNumber2Ref.current.value,
-							phoneNumber3Ref.current.value,
-							phoneNumber4Ref.current.value,
-						]) === true
-					) {
-						handleUserInfo({
-							firstName: capitalize(firstNameRef.current.value),
-							lastName: capitalize(lastNameRef.current.value),
-							email: emailRef.current.value,
-							city: capitalize(cityRef.current.value),
-							phone: formatPhoneNumber([phoneNumber1Ref.current.value, phoneNumber2Ref.current.value, phoneNumber3Ref.current.value, phoneNumber4Ref.current.value]),
-						});
-					}
-					firstNameRef.current.value = '';
-					lastNameRef.current.value = '';
-					emailRef.current.value = '';
-					cityRef.current.value = '';
-					phoneNumber1Ref.current.value = '';
-					phoneNumber2Ref.current.value = '';
-					phoneNumber3Ref.current.value = '';
-					phoneNumber4Ref.current.value = '';
-				}
 			}}>
 			<u>
 				<h3>User Information Form</h3>
@@ -88,10 +36,7 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 			{/* first name input */}
 			<div className='input-wrap'>
 				<label>{'First Name'}:</label>
-				<input
-					ref={firstNameRef}
-					placeholder='Bilbo'
-				/>
+				<input placeholder='Bilbo' />
 			</div>
 			{isSubmitted && !isNameValid(firstName) ? (
 				<ErrorMessage
@@ -102,10 +47,7 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 			{/* last name input */}
 			<div className='input-wrap'>
 				<label>{'Last Name'}:</label>
-				<input
-					ref={lastNameRef}
-					placeholder='Baggins'
-				/>
+				<input placeholder='Baggins' />
 			</div>
 			{isSubmitted && !isNameValid(lastName) ? (
 				<ErrorMessage
@@ -117,10 +59,7 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 			{/* Email Input */}
 			<div className='input-wrap'>
 				<label>{'Email'}:</label>
-				<input
-					ref={emailRef}
-					placeholder='bilbo-baggins@adventurehobbits.net'
-				/>
+				<input placeholder='bilbo-baggins@adventurehobbits.net' />
 			</div>
 			{isSubmitted && !isEmailValid(email) ? (
 				<ErrorMessage
@@ -132,10 +71,7 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 			{/* City Input */}
 			<div className='input-wrap'>
 				<label>{'City'}:</label>
-				<input
-					ref={cityRef}
-					placeholder='Hobbiton'
-				/>
+				<input placeholder='Hobbiton' />
 			</div>
 			{isSubmitted && isValidCity(city) === false ? (
 				<ErrorMessage
@@ -148,46 +84,34 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 				<label htmlFor='phone'>Phone:</label>
 				<div id='phone-input-wrap'>
 					<input
-						ref={phoneNumber1Ref}
 						type='text'
 						id='phone-input-1'
 						placeholder='55'
-						onChange={() => {
-							switchInput(phoneNumber1Ref, phoneNumberRefs);
-						}}
+						onChange={() => {}}
 						maxLength={2}
 					/>
 					-
 					<input
-						ref={phoneNumber2Ref}
 						type='text'
 						id='phone-input-2'
 						placeholder='55'
-						onChange={() => {
-							switchInput(phoneNumber2Ref, phoneNumberRefs);
-						}}
+						onChange={() => {}}
 						maxLength={2}
 					/>
 					-
 					<input
-						ref={phoneNumber3Ref}
 						type='text'
 						id='phone-input-3'
 						placeholder='55'
-						onChange={() => {
-							switchInput(phoneNumber3Ref, phoneNumberRefs);
-						}}
+						onChange={() => {}}
 						maxLength={2}
 					/>
 					-
 					<input
-						ref={phoneNumber4Ref}
 						type='text'
 						id='phone-input-4'
 						placeholder='5'
-						onChange={() => {
-							switchInput(phoneNumber4Ref, phoneNumberRefs);
-						}}
+						onChange={() => {}}
 						maxLength={1}
 					/>
 				</div>
