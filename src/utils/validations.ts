@@ -7,7 +7,7 @@ export function isEmailValid(emailAddress: string) {
 	return !!emailAddress?.match(regex);
 }
 
-const hasNumberOrNonAlfa = (name: string): boolean => {
+export const hasNumberOrNonAlfa = (name: string): boolean => {
 	return /\d/.test(name) === false && /^[a-zA-Z0-9]+$/.test(name) === true ? false : true;
 };
 
@@ -19,10 +19,10 @@ export const isValidCity = (city: string): boolean => {
 	return allCities.find((validCity) => validCity === capitalize(city)) === undefined ? false : true;
 };
 
-export const isValidPhoneNumber = (phoneArr: Array<string>): boolean => {
-	return /^\d+$/.test(phoneArr.join(''));
+export const isValidNumber = (numberSet: string): boolean => {
+	return /^\d+$/.test(numberSet);
 };
 
 export const isAllValid = (firstName: string, lastName: string, email: string, city: string, phone: Array<string>): boolean => {
-	return isNameValid(firstName) === true && isNameValid(lastName) === true && isEmailValid(email) === true && isValidCity(city) === true && isValidPhoneNumber(phone);
+	return isNameValid(firstName) === true && isNameValid(lastName) === true && isEmailValid(email) === true && isValidCity(city) === true && isValidNumber(phone.join(''));
 };

@@ -1,6 +1,6 @@
 import { Component, createRef } from 'react';
 import { ErrorMessage } from '../ErrorMessage';
-import { isAllValid, isEmailValid, isNameValid, isValidCity, isValidPhoneNumber } from '../utils/validations';
+import { isAllValid, isEmailValid, isNameValid, isValidCity } from '../utils/validations';
 import { switchInput } from '../ts-functions/functions';
 import { UserInformation } from '../types';
 import { capitalize, formatPhoneNumber } from '../utils/transformations';
@@ -195,7 +195,7 @@ export class ClassForm extends Component<{ handleInformation: (userInfo: UserInf
 						/>
 					</div>
 				</div>
-				{hasSubmitted === true && !isValidPhoneNumber(phoneNumber) ? (
+				{hasSubmitted === true ? (
 					<ErrorMessage
 						message={phoneNumberErrorMessage}
 						show={true}

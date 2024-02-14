@@ -1,9 +1,9 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { ErrorMessage } from '../ErrorMessage';
 import { UserInformation } from '../types';
-import { isAllValid, isEmailValid, isNameValid, isValidCity, isValidPhoneNumber } from '../utils/validations';
-import { switchInput } from '../ts-functions/functions';
+import { hasNumberOrNonAlfa, isAllValid, isEmailValid, isNameValid, isValidCity, isValidNumber } from '../utils/validations';
 import { capitalize, formatPhoneNumber } from '../utils/transformations';
+import { allCities } from '../utils/all-cities';
 
 const firstNameErrorMessage = 'First name must be at least 2 characters long';
 const lastNameErrorMessage = 'Last name must be at least 2 characters long';
@@ -16,6 +16,7 @@ type THandleUserInfo = {
 };
 
 export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
+	const cities = allCities.join('\n');
 	const [isSubmitted, setIsSubmitted] = useState(false);
 
 	const [firstName, setFirstName] = useState('');
@@ -23,6 +24,7 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 	const [email, setEmail] = useState('');
 	const [city, setCity] = useState('');
 	const [phoneNumber, setPhoneNumber] = useState(['', '', '', '']);
+	console.log(phoneNumber);
 
 	return (
 		<form
@@ -71,7 +73,10 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 			{/* City Input */}
 			<div className='input-wrap'>
 				<label>{'City'}:</label>
-				<input placeholder='Hobbiton' />
+				<input
+					placeholder='Hobbiton'
+					list='cities'
+				/>
 			</div>
 			{isSubmitted && isValidCity(city) === false ? (
 				<ErrorMessage
@@ -87,7 +92,13 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 						type='text'
 						id='phone-input-1'
 						placeholder='55'
-						onChange={() => {}}
+						onChange={(e) => {
+							const phoneSet = [...phoneNumber];
+							let set = [...phoneSet[0]];
+							set = [e.currentTarget.value];
+							phoneSet[0] = set.join('');
+							setPhoneNumber([...phoneSet]);
+						}}
 						maxLength={2}
 					/>
 					-
@@ -95,7 +106,13 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 						type='text'
 						id='phone-input-2'
 						placeholder='55'
-						onChange={() => {}}
+						onChange={(e) => {
+							const phoneSet = [...phoneNumber];
+							let set = [...phoneSet[1]];
+							set = [e.currentTarget.value];
+							phoneSet[1] = set.join('');
+							setPhoneNumber([...phoneSet]);
+						}}
 						maxLength={2}
 					/>
 					-
@@ -103,7 +120,13 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 						type='text'
 						id='phone-input-3'
 						placeholder='55'
-						onChange={() => {}}
+						onChange={(e) => {
+							const phoneSet = [...phoneNumber];
+							let set = [...phoneSet[2]];
+							set = [e.currentTarget.value];
+							phoneSet[2] = set.join('');
+							setPhoneNumber([...phoneSet]);
+						}}
 						maxLength={2}
 					/>
 					-
@@ -111,13 +134,19 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 						type='text'
 						id='phone-input-4'
 						placeholder='5'
-						onChange={() => {}}
+						onChange={(e) => {
+							const phoneSet = [...phoneNumber];
+							let set = [...phoneSet[3]];
+							set = [e.currentTarget.value];
+							phoneSet[3] = set.join('');
+							setPhoneNumber([...phoneSet]);
+						}}
 						maxLength={1}
 					/>
 				</div>
 			</div>
 
-			{isSubmitted && isValidPhoneNumber(phoneNumber) === false ? (
+			{isSubmitted === false && phoneNumber.join('').length < 7 ? (
 				<ErrorMessage
 					message={phoneNumberErrorMessage}
 					show={true}
