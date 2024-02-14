@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ErrorMessage } from '../ErrorMessage';
 import { UserInformation } from '../types';
 import { hasNumberOrNonAlfa, isAllValid, isEmailValid, isNameValid, isValidCity, isValidNumber } from '../utils/validations';
 import { capitalize, formatPhoneNumber } from '../utils/transformations';
 import { allCities } from '../utils/all-cities';
+import { setArray, switchInput } from '../ts-functions/functions';
 
 const firstNameErrorMessage = 'First name must be at least 2 characters long';
 const lastNameErrorMessage = 'Last name must be at least 2 characters long';
@@ -24,12 +25,14 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 	const [email, setEmail] = useState('');
 	const [city, setCity] = useState('');
 	const [phoneNumber, setPhoneNumber] = useState(['', '', '', '']);
-	console.log(phoneNumber);
+
+	const phoneSetRefs = [useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null)];
 
 	return (
 		<form
 			onSubmit={(e) => {
 				e.preventDefault();
+				setIsSubmitted(true);
 			}}>
 			<u>
 				<h3>User Information Form</h3>
@@ -38,9 +41,14 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 			{/* first name input */}
 			<div className='input-wrap'>
 				<label>{'First Name'}:</label>
-				<input placeholder='Bilbo' />
+				<input
+					placeholder='Bilbo'
+					onChange={(e) => {
+						setFirstName(e.currentTarget.value);
+					}}
+				/>
 			</div>
-			{isSubmitted && !isNameValid(firstName) ? (
+			{isSubmitted && firstName.length < 2 ? (
 				<ErrorMessage
 					message={firstNameErrorMessage}
 					show={true}
@@ -49,9 +57,14 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 			{/* last name input */}
 			<div className='input-wrap'>
 				<label>{'Last Name'}:</label>
-				<input placeholder='Baggins' />
+				<input
+					placeholder='Baggins'
+					onChange={(e) => {
+						setLastName(e.target.value);
+					}}
+				/>
 			</div>
-			{isSubmitted && !isNameValid(lastName) ? (
+			{isSubmitted && lastName.length < 2 ? (
 				<ErrorMessage
 					message={lastNameErrorMessage}
 					show={true}
@@ -61,7 +74,12 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 			{/* Email Input */}
 			<div className='input-wrap'>
 				<label>{'Email'}:</label>
-				<input placeholder='bilbo-baggins@adventurehobbits.net' />
+				<input
+					placeholder='bilbo-baggins@adventurehobbits.net'
+					onChange={(e) => {
+						setEmail(e.currentTarget.value);
+					}}
+				/>
 			</div>
 			{isSubmitted && !isEmailValid(email) ? (
 				<ErrorMessage
@@ -76,6 +94,9 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 				<input
 					placeholder='Hobbiton'
 					list='cities'
+					onChange={(e) => {
+						setCity(e.currentTarget.value);
+					}}
 				/>
 			</div>
 			{isSubmitted && isValidCity(city) === false ? (
@@ -93,13 +114,15 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 						id='phone-input-1'
 						placeholder='55'
 						onChange={(e) => {
-							const phoneSet = [...phoneNumber];
-							let set = [...phoneSet[0]];
-							set = [e.currentTarget.value];
-							phoneSet[0] = set.join('');
-							setPhoneNumber([...phoneSet]);
+							if (isValidNumber(e.currentTarget.value)) {
+								setPhoneNumber([...setArray(phoneNumber, e.currentTarget.value, 0)]);
+							} else {
+								e.currentTarget.value = '';
+							}
+							switchInput(phoneSetRefs[0], phoneSetRefs);
 						}}
 						maxLength={2}
+						ref={phoneSetRefs[0]}
 					/>
 					-
 					<input
@@ -107,13 +130,15 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 						id='phone-input-2'
 						placeholder='55'
 						onChange={(e) => {
-							const phoneSet = [...phoneNumber];
-							let set = [...phoneSet[1]];
-							set = [e.currentTarget.value];
-							phoneSet[1] = set.join('');
-							setPhoneNumber([...phoneSet]);
+							if (isValidNumber(e.currentTarget.value)) {
+								setPhoneNumber([...setArray(phoneNumber, e.currentTarget.value, 1)]);
+							} else {
+								e.currentTarget.value = '';
+							}
+							switchInput(phoneSetRefs[1], phoneSetRefs);
 						}}
 						maxLength={2}
+						ref={phoneSetRefs[1]}
 					/>
 					-
 					<input
@@ -121,13 +146,15 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 						id='phone-input-3'
 						placeholder='55'
 						onChange={(e) => {
-							const phoneSet = [...phoneNumber];
-							let set = [...phoneSet[2]];
-							set = [e.currentTarget.value];
-							phoneSet[2] = set.join('');
-							setPhoneNumber([...phoneSet]);
+							if (isValidNumber(e.currentTarget.value)) {
+								setPhoneNumber([...setArray(phoneNumber, e.currentTarget.value, 2)]);
+							} else {
+								e.currentTarget.value = '';
+							}
+							switchInput(phoneSetRefs[2], phoneSetRefs);
 						}}
 						maxLength={2}
+						ref={phoneSetRefs[2]}
 					/>
 					-
 					<input
@@ -135,18 +162,20 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 						id='phone-input-4'
 						placeholder='5'
 						onChange={(e) => {
-							const phoneSet = [...phoneNumber];
-							let set = [...phoneSet[3]];
-							set = [e.currentTarget.value];
-							phoneSet[3] = set.join('');
-							setPhoneNumber([...phoneSet]);
+							if (isValidNumber(e.currentTarget.value)) {
+								setPhoneNumber([...setArray(phoneNumber, e.currentTarget.value, 3)]);
+							} else {
+								e.currentTarget.value = '';
+							}
+							switchInput(phoneSetRefs[3], phoneSetRefs);
 						}}
 						maxLength={1}
+						ref={phoneSetRefs[3]}
 					/>
 				</div>
 			</div>
 
-			{isSubmitted === false && phoneNumber.join('').length < 7 ? (
+			{isSubmitted && phoneNumber.join('').length < 7 ? (
 				<ErrorMessage
 					message={phoneNumberErrorMessage}
 					show={true}

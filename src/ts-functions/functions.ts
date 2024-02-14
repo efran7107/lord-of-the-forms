@@ -8,6 +8,13 @@ export const switchInput = (phoneRef: RefObject<HTMLInputElement>, refArr: RefOb
 	}
 };
 
+export const setArray = (phoneArr: string[], value: string, index: number) => {
+	const phoneSet = [...phoneArr];
+	let set = [...phoneSet[index]];
+	set = [value];
+	phoneSet[index] = set.join('');
+	return phoneSet;
+};
 // export const addToState = (phoneRef: RefObject<HTMLInputElement>): boolean => {
 // 	return phoneRef.current?.value.length === phoneRef.current?.maxLength;
 // };
