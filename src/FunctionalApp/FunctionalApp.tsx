@@ -5,6 +5,7 @@ import { UserInformation } from '../types';
 
 export const FunctionalApp = () => {
 	const [userInfo, setUserInfo] = useState<UserInformation | null>(null);
+
 	return (
 		<>
 			<h2>Functional</h2>

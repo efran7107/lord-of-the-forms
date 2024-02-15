@@ -1,8 +1,8 @@
 import { Component, createRef } from 'react';
 import { ErrorMessage } from '../ErrorMessage';
-import { isAllValid, isEmailValid, isNameValid, isValidCity } from '../utils/validations';
-import { switchInput } from '../ts-functions/functions';
+import { isAllValid, isEmailValid, isValidCity, isValidNumber } from '../utils/validations';
 import { UserInformation } from '../types';
+import { setArray, switchInput } from '../ts-functions/functions';
 import { capitalize, formatPhoneNumber } from '../utils/transformations';
 
 const firstNameErrorMessage = 'First name must be at least 2 characters long';
@@ -20,67 +20,37 @@ export class ClassForm extends Component<{ handleInformation: (userInfo: UserInf
 		phoneNumber: ['', '', '', ''],
 		hasSubmitted: false,
 	};
-
-	firstNameRef = createRef<HTMLInputElement>();
-	lastNameRef = createRef<HTMLInputElement>();
-	emailRef = createRef<HTMLInputElement>();
-	cityRef = createRef<HTMLInputElement>();
-	phoneNumberRef1 = createRef<HTMLInputElement>();
-	phoneNumberRef2 = createRef<HTMLInputElement>();
-	phoneNumberRef3 = createRef<HTMLInputElement>();
-	phoneNumberRef4 = createRef<HTMLInputElement>();
+	phoneRef = [createRef<HTMLInputElement>(), createRef<HTMLInputElement>(), createRef<HTMLInputElement>(), createRef<HTMLInputElement>()];
 
 	render() {
 		const { firstName, lastName, email, city, phoneNumber, hasSubmitted } = this.state;
-		const { firstNameRef, lastNameRef, emailRef, cityRef, phoneNumberRef1, phoneNumberRef2, phoneNumberRef3, phoneNumberRef4 } = this;
 		const { handleInformation } = this.props;
-		const phoneRefArr = [phoneNumberRef1, phoneNumberRef2, phoneNumberRef3, phoneNumberRef4];
+		console.log(phoneNumber);
+
 		return (
 			<form
 				onSubmit={(e) => {
 					e.preventDefault();
-					if (
-						firstNameRef.current &&
-						lastNameRef.current &&
-						emailRef.current &&
-						cityRef.current &&
-						phoneNumberRef1.current &&
-						phoneNumberRef2.current &&
-						phoneNumberRef3.current &&
-						phoneNumberRef4.current
-					) {
+					this.setState({ hasSubmitted: true });
+					const allInfo: UserInformation = {
+						firstName: capitalize(firstName),
+						lastName: capitalize(lastName),
+						email: email,
+						city: capitalize(city),
+						phone: formatPhoneNumber(phoneNumber),
+					};
+					if (isAllValid(allInfo)) {
+						handleInformation(allInfo);
 						this.setState({
-							firstName: capitalize(firstNameRef.current.value),
-							lastName: capitalize(lastNameRef.current.value),
-							email: emailRef.current.value,
-							city: capitalize(cityRef.current.value),
-							phoneNumber: formatPhoneNumber([phoneNumberRef1.current.value, phoneNumberRef2.current.value, phoneNumberRef3.current.value, phoneNumberRef4.current.value]),
-							hasSubmitted: true,
+							firstName: '',
+							lastName: '',
+							email: '',
+							city: '',
+							phoneNumber: ['', '', '', ''],
+							hasSubmitted: false,
 						});
-						if (
-							isAllValid(firstNameRef.current.value, lastNameRef.current.value, emailRef.current.value, cityRef.current.value, [
-								phoneNumberRef1.current.value,
-								phoneNumberRef2.current.value,
-								phoneNumberRef3.current.value,
-								phoneNumberRef4.current.value,
-							])
-						) {
-							handleInformation({
-								firstName: firstNameRef.current.value,
-								lastName: lastNameRef.current.value,
-								email: emailRef.current.value,
-								city: cityRef.current.value,
-								phone: [phoneNumberRef1.current.value, phoneNumberRef2.current.value, phoneNumberRef3.current.value, phoneNumberRef4.current.value].join('-'),
-							});
-						}
-						firstNameRef.current.value = '';
-						lastNameRef.current.value = '';
-						emailRef.current.value = '';
-						cityRef.current.value = '';
-						phoneNumberRef1.current.value = '';
-						phoneNumberRef2.current.value = '';
-						phoneNumberRef3.current.value = '';
-						phoneNumberRef4.current.value = '';
+					} else {
+						alert('bad data input');
 					}
 				}}>
 				<u>
@@ -91,11 +61,14 @@ export class ClassForm extends Component<{ handleInformation: (userInfo: UserInf
 				<div className='input-wrap'>
 					<label>{'First Name'}:</label>
 					<input
-						ref={this.firstNameRef}
 						placeholder='Bilbo'
+						onChange={(e) => {
+							this.setState({ firstName: e.target.value });
+						}}
+						value={firstName}
 					/>
 				</div>
-				{hasSubmitted === true && !isNameValid(firstName) ? (
+				{hasSubmitted === true && firstName.length < 2 ? (
 					<ErrorMessage
 						message={firstNameErrorMessage}
 						show={true}
@@ -107,10 +80,13 @@ export class ClassForm extends Component<{ handleInformation: (userInfo: UserInf
 					<label>{'Last Name'}:</label>
 					<input
 						placeholder='Baggins'
-						ref={lastNameRef}
+						onChange={(e) => {
+							this.setState({ lastName: e.target.value });
+						}}
+						value={lastName}
 					/>
 				</div>
-				{hasSubmitted === true && !isNameValid(lastName) ? (
+				{hasSubmitted === true && lastName.length < 2 ? (
 					<ErrorMessage
 						message={lastNameErrorMessage}
 						show={true}
@@ -122,7 +98,10 @@ export class ClassForm extends Component<{ handleInformation: (userInfo: UserInf
 					<label>{'Email'}:</label>
 					<input
 						placeholder='bilbo-baggins@adventurehobbits.net'
-						ref={emailRef}
+						onChange={(e) => {
+							this.setState({ email: e.target.value });
+						}}
+						value={email}
 					/>
 				</div>
 				{hasSubmitted === true && !isEmailValid(email) ? (
@@ -137,10 +116,14 @@ export class ClassForm extends Component<{ handleInformation: (userInfo: UserInf
 					<label>{'City'}:</label>
 					<input
 						placeholder='Hobbiton'
-						ref={cityRef}
+						list='cities'
+						onChange={(e) => {
+							this.setState({ city: e.target.value });
+						}}
+						value={city}
 					/>
 				</div>
-				{hasSubmitted === true && !isValidCity(city) ? (
+				{hasSubmitted === true && !isValidCity(capitalize(city)) ? (
 					<ErrorMessage
 						message={cityErrorMessage}
 						show={true}
@@ -154,48 +137,76 @@ export class ClassForm extends Component<{ handleInformation: (userInfo: UserInf
 							type='text'
 							id='phone-input-1'
 							placeholder='55'
-							ref={phoneNumberRef1}
-							onChange={() => {
-								switchInput(phoneNumberRef1, phoneRefArr);
-							}}
 							maxLength={2}
+							ref={this.phoneRef[0]}
+							onChange={(e) => {
+								if (isValidNumber(e.currentTarget.value) || isValidNumber(phoneNumber[0])) {
+									this.setState({ phoneNumber: [...setArray(phoneNumber, e.currentTarget.value, 0)] });
+								} else {
+									if (e.currentTarget.value === '') e.currentTarget.value;
+									else e.currentTarget.value = phoneNumber[0];
+								}
+								switchInput(this.phoneRef[0], this.phoneRef);
+							}}
+							value={phoneNumber[0]}
 						/>
 						-
 						<input
 							type='text'
 							id='phone-input-2'
 							placeholder='55'
-							ref={phoneNumberRef2}
-							onChange={() => {
-								switchInput(phoneNumberRef2, phoneRefArr);
-							}}
 							maxLength={2}
+							ref={this.phoneRef[1]}
+							onChange={(e) => {
+								if (isValidNumber(e.currentTarget.value) || isValidNumber(phoneNumber[1])) {
+									this.setState({ phoneNumber: [...setArray(phoneNumber, e.currentTarget.value, 1)] });
+								} else {
+									if (e.currentTarget.value === '') e.currentTarget.value;
+									else e.currentTarget.value = phoneNumber[1];
+								}
+								switchInput(this.phoneRef[1], this.phoneRef);
+							}}
+							value={phoneNumber[1]}
 						/>
 						-
 						<input
 							type='text'
 							id='phone-input-3'
 							placeholder='55'
-							ref={phoneNumberRef3}
-							onChange={() => {
-								switchInput(phoneNumberRef3, phoneRefArr);
-							}}
 							maxLength={2}
+							ref={this.phoneRef[2]}
+							onChange={(e) => {
+								if (isValidNumber(e.currentTarget.value) || isValidNumber(phoneNumber[2])) {
+									this.setState({ phoneNumber: [...setArray(phoneNumber, e.currentTarget.value, 2)] });
+								} else {
+									if (e.currentTarget.value === '') e.currentTarget.value;
+									else e.currentTarget.value = phoneNumber[2];
+								}
+								switchInput(this.phoneRef[2], this.phoneRef);
+							}}
+							value={phoneNumber[2]}
 						/>
 						-
 						<input
 							type='text'
 							id='phone-input-4'
 							placeholder='5'
-							ref={phoneNumberRef4}
-							onChange={() => {
-								switchInput(phoneNumberRef4, phoneRefArr);
-							}}
 							maxLength={1}
+							ref={this.phoneRef[3]}
+							onChange={(e) => {
+								if (isValidNumber(e.currentTarget.value) || isValidNumber(phoneNumber[3])) {
+									this.setState({ phoneNumber: [...setArray(phoneNumber, e.currentTarget.value, 3)] });
+								} else {
+									if (e.currentTarget.value === '') e.currentTarget.value;
+									else e.currentTarget.value = phoneNumber[3];
+								}
+								switchInput(this.phoneRef[3], this.phoneRef);
+							}}
+							value={phoneNumber[3]}
 						/>
 					</div>
 				</div>
-				{hasSubmitted === true ? (
+				{hasSubmitted === true && phoneNumber.join('').length < 7 ? (
 					<ErrorMessage
 						message={phoneNumberErrorMessage}
 						show={true}

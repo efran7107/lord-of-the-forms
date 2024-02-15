@@ -1,9 +1,8 @@
 import { useRef, useState } from 'react';
 import { ErrorMessage } from '../ErrorMessage';
 import { UserInformation } from '../types';
-import { hasNumberOrNonAlfa, isAllValid, isEmailValid, isNameValid, isValidCity, isValidNumber } from '../utils/validations';
+import { isAllValid, isEmailValid, isValidCity, isValidNumber } from '../utils/validations';
 import { capitalize, formatPhoneNumber } from '../utils/transformations';
-import { allCities } from '../utils/all-cities';
 import { setArray, switchInput } from '../ts-functions/functions';
 
 const firstNameErrorMessage = 'First name must be at least 2 characters long';
@@ -17,7 +16,7 @@ type THandleUserInfo = {
 };
 
 export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
-	const cities = allCities.join('\n');
+	// const cities = allCities.join('\n');
 	const [isSubmitted, setIsSubmitted] = useState(false);
 
 	const [firstName, setFirstName] = useState('');
@@ -33,6 +32,18 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 			onSubmit={(e) => {
 				e.preventDefault();
 				setIsSubmitted(true);
+				const allInfo: UserInformation = { firstName: capitalize(firstName), lastName: capitalize(lastName), email: email, city: capitalize(city), phone: formatPhoneNumber(phoneNumber) };
+				if (isAllValid(allInfo)) {
+					handleUserInfo(allInfo);
+					setFirstName('');
+					setLastName('');
+					setEmail('');
+					setCity('');
+					setPhoneNumber(['', '', '', '']);
+					setIsSubmitted(false);
+				} else {
+					alert('bad data input');
+				}
 			}}>
 			<u>
 				<h3>User Information Form</h3>
@@ -46,6 +57,7 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 					onChange={(e) => {
 						setFirstName(e.currentTarget.value);
 					}}
+					value={firstName}
 				/>
 			</div>
 			{isSubmitted && firstName.length < 2 ? (
@@ -62,6 +74,7 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 					onChange={(e) => {
 						setLastName(e.target.value);
 					}}
+					value={lastName}
 				/>
 			</div>
 			{isSubmitted && lastName.length < 2 ? (
@@ -79,6 +92,7 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 					onChange={(e) => {
 						setEmail(e.currentTarget.value);
 					}}
+					value={email}
 				/>
 			</div>
 			{isSubmitted && !isEmailValid(email) ? (
@@ -97,9 +111,10 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 					onChange={(e) => {
 						setCity(e.currentTarget.value);
 					}}
+					value={city}
 				/>
 			</div>
-			{isSubmitted && isValidCity(city) === false ? (
+			{isSubmitted && isValidCity(capitalize(city)) === false ? (
 				<ErrorMessage
 					message={cityErrorMessage}
 					show={true}
@@ -114,15 +129,17 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 						id='phone-input-1'
 						placeholder='55'
 						onChange={(e) => {
-							if (isValidNumber(e.currentTarget.value)) {
+							if (isValidNumber(e.currentTarget.value) || isValidNumber(phoneNumber[0])) {
 								setPhoneNumber([...setArray(phoneNumber, e.currentTarget.value, 0)]);
 							} else {
-								e.currentTarget.value = '';
+								if (e.currentTarget.value === '') e.currentTarget.value;
+								else e.currentTarget.value = phoneNumber[0];
 							}
 							switchInput(phoneSetRefs[0], phoneSetRefs);
 						}}
 						maxLength={2}
 						ref={phoneSetRefs[0]}
+						value={phoneNumber[0]}
 					/>
 					-
 					<input
@@ -130,15 +147,17 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 						id='phone-input-2'
 						placeholder='55'
 						onChange={(e) => {
-							if (isValidNumber(e.currentTarget.value)) {
+							if (isValidNumber(e.currentTarget.value) || isValidNumber(phoneNumber[1])) {
 								setPhoneNumber([...setArray(phoneNumber, e.currentTarget.value, 1)]);
 							} else {
-								e.currentTarget.value = '';
+								if (e.currentTarget.value === '') e.currentTarget.value;
+								else e.currentTarget.value = phoneNumber[1];
 							}
 							switchInput(phoneSetRefs[1], phoneSetRefs);
 						}}
 						maxLength={2}
 						ref={phoneSetRefs[1]}
+						value={phoneNumber[1]}
 					/>
 					-
 					<input
@@ -146,15 +165,17 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 						id='phone-input-3'
 						placeholder='55'
 						onChange={(e) => {
-							if (isValidNumber(e.currentTarget.value)) {
+							if (isValidNumber(e.currentTarget.value) || isValidNumber(phoneNumber[2])) {
 								setPhoneNumber([...setArray(phoneNumber, e.currentTarget.value, 2)]);
 							} else {
-								e.currentTarget.value = '';
+								if (e.currentTarget.value === '') e.currentTarget.value;
+								else e.currentTarget.value = phoneNumber[2];
 							}
 							switchInput(phoneSetRefs[2], phoneSetRefs);
 						}}
 						maxLength={2}
 						ref={phoneSetRefs[2]}
+						value={phoneNumber[2]}
 					/>
 					-
 					<input
@@ -162,15 +183,17 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 						id='phone-input-4'
 						placeholder='5'
 						onChange={(e) => {
-							if (isValidNumber(e.currentTarget.value)) {
+							if (isValidNumber(e.currentTarget.value) || isValidNumber(phoneNumber[3])) {
 								setPhoneNumber([...setArray(phoneNumber, e.currentTarget.value, 3)]);
 							} else {
-								e.currentTarget.value = '';
+								if (e.currentTarget.value === '') e.currentTarget.value;
+								else e.currentTarget.value = phoneNumber[3];
 							}
 							switchInput(phoneSetRefs[3], phoneSetRefs);
 						}}
 						maxLength={1}
 						ref={phoneSetRefs[3]}
+						value={phoneNumber[3]}
 					/>
 				</div>
 			</div>

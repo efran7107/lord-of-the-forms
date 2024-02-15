@@ -1,3 +1,4 @@
+import { UserInformation } from '../types';
 import { allCities } from './all-cities';
 import { capitalize } from './transformations';
 
@@ -7,7 +8,7 @@ export function isEmailValid(emailAddress: string) {
 	return !!emailAddress?.match(regex);
 }
 
-export const hasNumberOrNonAlfa = (name: string): boolean => {
+const hasNumberOrNonAlfa = (name: string): boolean => {
 	return /\d/.test(name) === false && /^[a-zA-Z0-9]+$/.test(name) === true ? false : true;
 };
 
@@ -23,6 +24,11 @@ export const isValidNumber = (numberSet: string): boolean => {
 	return /^\d+$/.test(numberSet);
 };
 
-export const isAllValid = (firstName: string, lastName: string, email: string, city: string, phone: Array<string>): boolean => {
-	return isNameValid(firstName) === true && isNameValid(lastName) === true && isEmailValid(email) === true && isValidCity(city) === true && isValidNumber(phone.join(''));
+export const isAllValid = (userInfo: UserInformation): boolean => {
+	const { firstName, lastName, email, city, phone } = userInfo;
+	if (isNameValid(firstName) && isNameValid(lastName) && isEmailValid(email) && isValidCity(city) && isValidNumber(phone.split('-').join(''))) {
+		return true;
+	} else {
+		return false;
+	}
 };
