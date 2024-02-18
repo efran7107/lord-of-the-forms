@@ -1,4 +1,5 @@
 import { RefObject } from 'react';
+import { isEmailValid } from '../utils/validations';
 
 export const switchInput = (phoneRef: RefObject<HTMLInputElement>, refArr: RefObject<HTMLInputElement>[]) => {
 	if (phoneRef.current?.value.length === phoneRef.current?.maxLength && refArr.indexOf(phoneRef) < refArr.length - 1) {
@@ -15,6 +16,3 @@ export const setArray = (phoneArr: string[], value: string, index: number) => {
 	phoneSet[index] = set.join('');
 	return phoneSet;
 };
-// export const addToState = (phoneRef: RefObject<HTMLInputElement>): boolean => {
-// 	return phoneRef.current?.value.length === phoneRef.current?.maxLength;
-// };

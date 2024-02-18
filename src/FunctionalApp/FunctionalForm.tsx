@@ -4,6 +4,7 @@ import { UserInformation } from '../types';
 import { isAllValid, isEmailValid, isValidCity, isValidNumber } from '../utils/validations';
 import { capitalize, formatPhoneNumber } from '../utils/transformations';
 import { setArray, switchInput } from '../ts-functions/functions';
+import { FunctionalTextInput } from './FunctionalTextInput';
 
 const firstNameErrorMessage = 'First name must be at least 2 characters long';
 const lastNameErrorMessage = 'Last name must be at least 2 characters long';
@@ -50,76 +51,61 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 			</u>
 
 			{/* first name input */}
-			<div className='input-wrap'>
-				<label>{'First Name'}:</label>
-				<input
-					placeholder='Bilbo'
-					onChange={(e) => {
+			<FunctionalTextInput
+				label='First Name'
+				inputProps={{
+					placeholder: 'Bilbo',
+					onChange: (e) => {
 						setFirstName(e.currentTarget.value);
-					}}
-					value={firstName}
-				/>
-			</div>
-			{isSubmitted && firstName.length < 2 ? (
-				<ErrorMessage
-					message={firstNameErrorMessage}
-					show={true}
-				/>
-			) : null}
+					},
+					value: firstName,
+				}}
+				errorMessage={firstNameErrorMessage}
+				submitted={isSubmitted}
+			/>
+
 			{/* last name input */}
-			<div className='input-wrap'>
-				<label>{'Last Name'}:</label>
-				<input
-					placeholder='Baggins'
-					onChange={(e) => {
-						setLastName(e.target.value);
-					}}
-					value={lastName}
-				/>
-			</div>
-			{isSubmitted && lastName.length < 2 ? (
-				<ErrorMessage
-					message={lastNameErrorMessage}
-					show={true}
-				/>
-			) : null}
+			<FunctionalTextInput
+				label='Last Name'
+				inputProps={{
+					placeholder: 'Baggins',
+					onChange: (e) => {
+						setLastName(e.currentTarget.value);
+					},
+					value: lastName,
+				}}
+				errorMessage={lastNameErrorMessage}
+				submitted={isSubmitted}
+			/>
 
 			{/* Email Input */}
-			<div className='input-wrap'>
-				<label>{'Email'}:</label>
-				<input
-					placeholder='bilbo-baggins@adventurehobbits.net'
-					onChange={(e) => {
+			<FunctionalTextInput
+				label='Email'
+				inputProps={{
+					placeholder: 'bilbo-baggins@adventurehobbits.net',
+					onChange: (e) => {
 						setEmail(e.currentTarget.value);
-					}}
-					value={email}
-				/>
-			</div>
-			{isSubmitted && !isEmailValid(email) ? (
-				<ErrorMessage
-					message={emailErrorMessage}
-					show={true}
-				/>
-			) : null}
+					},
+					value: email,
+				}}
+				errorMessage={emailErrorMessage}
+				submitted={isSubmitted}
+			/>
 
 			{/* City Input */}
-			<div className='input-wrap'>
-				<label>{'City'}:</label>
-				<input
-					placeholder='Hobbiton'
-					list='cities'
-					onChange={(e) => {
+			<FunctionalTextInput
+				label='City'
+				inputProps={{
+					placeholder: 'Hobbiton',
+					list: 'cities',
+					onChange: (e) => {
 						setCity(e.currentTarget.value);
-					}}
-					value={city}
-				/>
-			</div>
-			{isSubmitted && isValidCity(capitalize(city)) === false ? (
-				<ErrorMessage
-					message={cityErrorMessage}
-					show={true}
-				/>
-			) : null}
+					},
+					value: city,
+				}}
+				errorMessage={cityErrorMessage}
+				submitted={isSubmitted}
+			/>
 
 			<div className='input-wrap'>
 				<label htmlFor='phone'>Phone:</label>
