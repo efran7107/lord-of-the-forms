@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, RefObject } from 'react';
 
 export type UserInformation = {
 	firstName: string;
@@ -11,7 +11,9 @@ export type UserInformation = {
 export type TextInputProps = ComponentProps<'input'>;
 
 export type PhoneSets = {
-	ref: HTMLInputElement | null;
+	input: RefObject<HTMLInputElement> | null;
 	length: number;
 	key: string;
 };
+
+
