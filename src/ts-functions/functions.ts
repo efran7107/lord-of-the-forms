@@ -16,10 +16,12 @@ export const setArray = (phoneArr: string[], value: string, index: number) => {
 	return phoneSet;
 };
 
-export const makeRef = (len: number): string => {
+export const makePlaceholder = (len: number): string => {
 	let placeHolder = '';
 	for (let i = 0; i < len; i++) {
 		placeHolder += '5';
 	}
 	return placeHolder;
 };
+
+export const getRefObjArr = (refArr: Array<HTMLInputElement | null>, lengArr: Array<number>) => {};
