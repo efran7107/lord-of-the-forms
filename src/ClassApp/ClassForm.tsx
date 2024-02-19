@@ -25,7 +25,6 @@ export class ClassForm extends Component<{ handleInformation: (userInfo: UserInf
 	render() {
 		const { firstName, lastName, email, city, phoneNumber, hasSubmitted } = this.state;
 		const { handleInformation } = this.props;
-		console.log(phoneNumber);
 
 		return (
 			<form

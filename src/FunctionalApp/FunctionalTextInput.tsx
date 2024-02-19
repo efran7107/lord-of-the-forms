@@ -2,18 +2,19 @@ import { ErrorMessage } from '../ErrorMessage';
 import { TextInputProps } from '../types';
 import { isEmailValid, isValidCity } from '../utils/validations';
 
-export const FunctionalTextInput = ({ inputProps, label, errorMessage, submitted }: { inputProps: TextInputProps; label: string; errorMessage: string; submitted: boolean }) => {
+export const FunctionalTextInput = ({ inputProps, label, errorMessage, submitted }: { inputProps: TextInputProps; label: string | undefined; errorMessage: string; submitted: boolean }) => {
 	const { value } = inputProps;
 	const strVal = value?.toString();
 	return (
 		<>
 			<div className='input-wrap'>
-				<label htmlFor=''>{label}</label>
+				<label htmlFor={label}>{label}: </label>
 				<input
 					type='text'
 					{...inputProps}
 				/>
 			</div>
+
 			<ErrorMessage
 				message={errorMessage}
 				show={

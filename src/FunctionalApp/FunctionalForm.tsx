@@ -1,10 +1,11 @@
 import { useRef, useState } from 'react';
 import { ErrorMessage } from '../ErrorMessage';
 import { UserInformation } from '../types';
-import { isAllValid, isEmailValid, isValidCity, isValidNumber } from '../utils/validations';
+import { isAllValid, isValidNumber } from '../utils/validations';
 import { capitalize, formatPhoneNumber } from '../utils/transformations';
 import { setArray, switchInput } from '../ts-functions/functions';
 import { FunctionalTextInput } from './FunctionalTextInput';
+import { FunctionalPhoneInput } from './FunctionalPhoneInput';
 
 const firstNameErrorMessage = 'First name must be at least 2 characters long';
 const lastNameErrorMessage = 'Last name must be at least 2 characters long';
@@ -107,7 +108,15 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 				submitted={isSubmitted}
 			/>
 
-			<div className='input-wrap'>
+			<FunctionalPhoneInput
+				phoneArr={phoneNumber}
+				handlePhoneArr={(phoneNumber) => setPhoneNumber(phoneNumber)}
+				error={phoneNumberErrorMessage}
+				submitted={isSubmitted}
+				label='Phone'
+			/>
+
+			{/* <div className='input-wrap'>
 				<label htmlFor='phone'>Phone:</label>
 				<div id='phone-input-wrap'>
 					<input
@@ -189,7 +198,7 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 					message={phoneNumberErrorMessage}
 					show={true}
 				/>
-			) : null}
+			) : null} */}
 
 			<input
 				type='submit'
