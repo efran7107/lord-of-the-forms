@@ -9,3 +9,9 @@ export type UserInformation = {
 };
 
 export type TextInputProps = ComponentProps<'input'>;
+
+export type PhoneSets = {
+	ref: HTMLInputElement | null;
+	length: number;
+	key: string;
+};

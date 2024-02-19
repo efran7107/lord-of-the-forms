@@ -1,6 +1,5 @@
 import { useRef } from 'react';
-import { FunctionalTextInput } from './FunctionalTextInput';
-import { makeRef } from '../ts-functions/functions';
+import { ErrorMessage } from '../ErrorMessage';
 
 export const FunctionalPhoneInput = ({
 	label,
@@ -24,19 +23,12 @@ export const FunctionalPhoneInput = ({
 		<>
 			<div className='input-wrap'>
 				<label htmlFor='phone'>{label}:</label>
-				<div id='phone-input-wrap'>
-					{phoneRefArr.map((ref) => (
-						<input
-							type='text'
-							placeholder={makeRef(phoneRefArrLen[phoneRefArr.indexOf(ref)])}
-							id={`phone-input-${phoneRefArr.indexOf(ref) + 1}`}
-							maxLength={phoneRefArrLen[phoneRefArr.indexOf(ref)]}
-							ref={ref}
-							value={phoneArr[phoneRefArr.indexOf(ref)]}
-						/>
-					))}
-				</div>
+				<div id='phone-input-wrap'></div>
 			</div>
+			<ErrorMessage
+				message={error}
+				show={submitted && phoneArr.join('').length < 7}
+			/>
 		</>
 	);
 };

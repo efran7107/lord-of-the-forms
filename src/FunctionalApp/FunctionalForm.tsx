@@ -1,9 +1,7 @@
-import { useRef, useState } from 'react';
-import { ErrorMessage } from '../ErrorMessage';
+import { useState } from 'react';
 import { UserInformation } from '../types';
-import { isAllValid, isValidNumber } from '../utils/validations';
+import { isAllValid } from '../utils/validations';
 import { capitalize, formatPhoneNumber } from '../utils/transformations';
-import { setArray, switchInput } from '../ts-functions/functions';
 import { FunctionalTextInput } from './FunctionalTextInput';
 import { FunctionalPhoneInput } from './FunctionalPhoneInput';
 
@@ -27,10 +25,9 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 	const [city, setCity] = useState('');
 	const [phoneNumber, setPhoneNumber] = useState(['', '', '', '']);
 
-	const phoneSetRefs = [useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null)];
-
 	return (
 		<form
+			key='functional-form'
 			onSubmit={(e) => {
 				e.preventDefault();
 				setIsSubmitted(true);
@@ -48,7 +45,7 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
 				}
 			}}>
 			<u>
-				<h3>User Information Form</h3>
+				<h3 key='userInfo'>User Information Form</h3>
 			</u>
 
 			{/* first name input */}

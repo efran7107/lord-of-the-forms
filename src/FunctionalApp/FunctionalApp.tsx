@@ -9,8 +9,14 @@ export const FunctionalApp = () => {
 	return (
 		<>
 			<h2>Functional</h2>
-			<ProfileInformation userData={userInfo} />
-			<FunctionalForm handleUserInfo={(userInfo) => setUserInfo(userInfo)} />
+			<ProfileInformation
+				key='ProfileInfo'
+				userData={userInfo}
+			/>
+			<FunctionalForm
+				key='functionForm'
+				handleUserInfo={(userInfo) => setUserInfo(userInfo)}
+			/>
 		</>
 	);
 };

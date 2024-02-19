@@ -8,7 +8,11 @@ export const FunctionalTextInput = ({ inputProps, label, errorMessage, submitted
 	return (
 		<>
 			<div className='input-wrap'>
-				<label htmlFor={label}>{label}: </label>
+				<label
+					htmlFor={label}
+					key={label}>
+					{label}:{' '}
+				</label>
 				<input
 					type='text'
 					{...inputProps}
