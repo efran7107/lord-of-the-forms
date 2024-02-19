@@ -24,6 +24,33 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
   const [city, setCity] = useState("");
   const [phoneNumber, setPhoneNumber] = useState(["", "", "", ""]);
 
+  const inputObjArr = [
+    {
+      label: "First Name",
+      placeholder: "Bilbo",
+      errorMessage: firstNameErrorMessage,
+      value: firstName,
+    },
+    {
+      label: "Last Name",
+      placeholder: "Baggins",
+      errorMessage: lastNameErrorMessage,
+      value: lastName,
+    },
+    {
+      label: "Email",
+      placeholder: "bilbo-baggins@adventurehobbits.net",
+      errorMessage: emailErrorMessage,
+      value: email,
+    },
+    {
+      label: "City",
+      placeholder: "Hobbiton",
+      errorMessage: cityErrorMessage,
+      value: city,
+    },
+  ];
+
   return (
     <form
       key="functional-form"
@@ -54,62 +81,37 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
         <h3 key="userInfo">User Information Form</h3>
       </u>
 
-      {/* first name input */}
-      <FunctionalTextInput
-        label="First Name"
-        inputProps={{
-          placeholder: "Bilbo",
-          onChange: (e) => {
-            setFirstName(e.currentTarget.value);
-          },
-          value: firstName,
-        }}
-        errorMessage={firstNameErrorMessage}
-        submitted={isSubmitted}
-      />
-
-      {/* last name input */}
-      <FunctionalTextInput
-        label="Last Name"
-        inputProps={{
-          placeholder: "Baggins",
-          onChange: (e) => {
-            setLastName(e.currentTarget.value);
-          },
-          value: lastName,
-        }}
-        errorMessage={lastNameErrorMessage}
-        submitted={isSubmitted}
-      />
-
-      {/* Email Input */}
-      <FunctionalTextInput
-        label="Email"
-        inputProps={{
-          placeholder: "bilbo-baggins@adventurehobbits.net",
-          onChange: (e) => {
-            setEmail(e.currentTarget.value);
-          },
-          value: email,
-        }}
-        errorMessage={emailErrorMessage}
-        submitted={isSubmitted}
-      />
-
-      {/* City Input */}
-      <FunctionalTextInput
-        label="City"
-        inputProps={{
-          placeholder: "Hobbiton",
-          list: "cities",
-          onChange: (e) => {
-            setCity(e.currentTarget.value);
-          },
-          value: city,
-        }}
-        errorMessage={cityErrorMessage}
-        submitted={isSubmitted}
-      />
+      {inputObjArr.map((input) => (
+        <FunctionalTextInput
+          key={input.label.toLowerCase()}
+          label={input.label}
+          inputProps={{
+            placeholder: input.placeholder,
+            onChange: (e) => {
+              switch (input.label) {
+                case "First Name":
+                  setFirstName(e.currentTarget.value);
+                  break;
+                case "Last Name":
+                  setLastName(e.currentTarget.value);
+                  break;
+                case "Email":
+                  setEmail(e.currentTarget.value);
+                  break;
+                case "City":
+                  setCity(e.currentTarget.value);
+                  break;
+                default:
+                  break;
+              }
+            },
+            value: input.value,
+            list: input.label === "City" ? "cities" : "",
+          }}
+          errorMessage={input.errorMessage}
+          submitted={isSubmitted}
+        />
+      ))}
 
       <FunctionalPhoneInput
         phoneArr={phoneNumber}

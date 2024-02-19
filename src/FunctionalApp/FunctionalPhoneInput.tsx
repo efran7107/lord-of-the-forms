@@ -33,14 +33,12 @@ export const FunctionalPhoneInput = ({
   return (
     <>
       <div className="input-wrap">
-        <label htmlFor="phone">{label}:</label>
+        <label>{label}:</label>
         <div id="phone-input-wrap">
           {refObjArr.map((ref) => {
-			const refIndex = refObjArr.indexOf(ref)
+            const refIndex = refObjArr.indexOf(ref);
             return (
-              <Fragment
-                key={(ref.key += `input-${refIndex + 1}`)}
-              >
+              <Fragment key={(ref.key += `input-${refIndex + 1}`)}>
                 <input
                   type="text"
                   ref={ref.input}
@@ -53,22 +51,13 @@ export const FunctionalPhoneInput = ({
                       isValidNumber(phoneArr[refIndex])
                     ) {
                       handlePhoneArr([
-                        ...setArray(
-                          phoneArr,
-                          e.currentTarget.value,
-                          refIndex
-                        ),
+                        ...setArray(phoneArr, e.currentTarget.value, refIndex),
                       ]);
                     } else {
                       if (e.currentTarget.value === "") e.currentTarget.value;
-                      else
-                        e.currentTarget.value =
-                          phoneArr[refIndex];
+                      else e.currentTarget.value = phoneArr[refIndex];
                     }
-                    switchInput(
-                      phoneRefArr[refIndex],
-                      phoneRefArr
-                    );
+                    switchInput(phoneRefArr[refIndex], phoneRefArr);
                   }}
                   value={phoneArr[refIndex]}
                 />
