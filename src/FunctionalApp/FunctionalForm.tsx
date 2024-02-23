@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { UserInformation } from "../types";
-import { isAllValid } from "../utils/validations";
+import { isAllValid, isEmailValid, isValidCity } from "../utils/validations";
 import { capitalize, formatPhoneNumber } from "../utils/transformations";
 import { FunctionalTextInput } from "./FunctionalTextInput";
 import { FunctionalPhoneInput } from "./FunctionalPhoneInput";
@@ -15,39 +15,55 @@ type THandleUserInfo = {
   handleUserInfo: (userInfo: UserInformation) => void;
 };
 
+const defaultBlankForm = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  city: "",
+  phoneNumber: ["", "", "", ""],
+};
+
 export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [city, setCity] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState(["", "", "", ""]);
+  const [formInfo, setFormInfo] = useState(defaultBlankForm);
+
+  const setPhoneNumber = (newPhone: Array<string>) => {
+    setFormInfo({ ...formInfo, phoneNumber: newPhone });
+  };
 
   const inputObjArr = [
     {
       label: "First Name",
       placeholder: "Bilbo",
       errorMessage: firstNameErrorMessage,
-      value: firstName,
+      value: formInfo.firstName,
+      key: "firstName",
+      isValid: formInfo.firstName.length >= 2,
     },
     {
       label: "Last Name",
       placeholder: "Baggins",
       errorMessage: lastNameErrorMessage,
-      value: lastName,
+      value: formInfo.lastName,
+      key: "lastName",
+      isValid: formInfo.lastName.length >= 2,
     },
     {
       label: "Email",
       placeholder: "bilbo-baggins@adventurehobbits.net",
       errorMessage: emailErrorMessage,
-      value: email,
+      value: formInfo.email,
+      key: "email",
+      isValid: isEmailValid(formInfo.email),
     },
     {
       label: "City",
       placeholder: "Hobbiton",
       errorMessage: cityErrorMessage,
-      value: city,
+      value: formInfo.city,
+      key: "city",
+      isValid: isValidCity(formInfo.city),
     },
   ];
 
@@ -58,52 +74,34 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
         e.preventDefault();
         setIsSubmitted(true);
         const allInfo: UserInformation = {
-          firstName: capitalize(firstName),
-          lastName: capitalize(lastName),
-          email: email,
-          city: capitalize(city),
-          phone: formatPhoneNumber(phoneNumber),
+          firstName: capitalize(formInfo.firstName),
+          lastName: capitalize(formInfo.lastName),
+          email: formInfo.email,
+          city: capitalize(formInfo.city),
+          phone: formatPhoneNumber(formInfo.phoneNumber),
         };
-        if (isAllValid(allInfo)) {
-          handleUserInfo(allInfo);
-          setFirstName("");
-          setLastName("");
-          setEmail("");
-          setCity("");
-          setPhoneNumber(["", "", "", ""]);
-          setIsSubmitted(false);
-        } else {
+        if (!isAllValid(allInfo)) {
           alert("bad data input");
+          return;
         }
+        handleUserInfo(allInfo);
+        setFormInfo(defaultBlankForm);
+        setIsSubmitted(false)
       }}
     >
       <u>
-        <h3 key="userInfo">User Information Form</h3>
+        <h3 key="formInfo">User Information Form</h3>
       </u>
 
       {inputObjArr.map((input) => (
         <FunctionalTextInput
           key={input.label.toLowerCase()}
           label={input.label}
+          isValid={input.isValid}
           inputProps={{
             placeholder: input.placeholder,
             onChange: (e) => {
-              switch (input.label) {
-                case "First Name":
-                  setFirstName(e.currentTarget.value);
-                  break;
-                case "Last Name":
-                  setLastName(e.currentTarget.value);
-                  break;
-                case "Email":
-                  setEmail(e.currentTarget.value);
-                  break;
-                case "City":
-                  setCity(e.currentTarget.value);
-                  break;
-                default:
-                  break;
-              }
+              setFormInfo({ ...formInfo, [input.key]: e.currentTarget.value });
             },
             value: input.value,
             list: input.label === "City" ? "cities" : "",
@@ -114,8 +112,8 @@ export const FunctionalForm = ({ handleUserInfo }: THandleUserInfo) => {
       ))}
 
       <FunctionalPhoneInput
-        phoneArr={phoneNumber}
-        handlePhoneArr={(phoneNumber) => setPhoneNumber(phoneNumber)}
+        phoneArr={formInfo.phoneNumber}
+        handlePhoneArr={setPhoneNumber}
         error={phoneNumberErrorMessage}
         submitted={isSubmitted}
         label="Phone"

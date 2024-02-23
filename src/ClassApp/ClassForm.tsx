@@ -1,5 +1,5 @@
-import { Component, createRef } from "react";
-import { isAllValid } from "../utils/validations";
+import { Component } from "react";
+import { isAllValid, isEmailValid, isValidCity } from "../utils/validations";
 import { UserInformation } from "../types";
 import { capitalize, formatPhoneNumber } from "../utils/transformations";
 import { ClassTextInput } from "./ClassTextInput";
@@ -11,28 +11,32 @@ const emailErrorMessage = "Email is Invalid";
 const cityErrorMessage = "State is Invalid";
 const phoneNumberErrorMessage = "Invalid Phone Number";
 
+const defaultBlankForm = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  city: "",
+  phoneNumber: ["", "", "", ""],
+};
+
 export class ClassForm extends Component<{
   handleInformation: (userInfo: UserInformation) => void;
+  
 }> {
   state = {
-    firstName: "",
-    lastName: "",
-    email: "",
-    city: "",
-    phoneNumber: ["", "", "", ""],
+    formInfo: defaultBlankForm,    
     hasSubmitted: false,
   };
-  phoneRef = [
-    createRef<HTMLInputElement>(),
-    createRef<HTMLInputElement>(),
-    createRef<HTMLInputElement>(),
-    createRef<HTMLInputElement>(),
-  ];
 
   render() {
-    const { firstName, lastName, email, city, phoneNumber, hasSubmitted } =
-      this.state;
+    const { firstName, lastName, email, city, phoneNumber } =
+      this.state.formInfo;
+      const { hasSubmitted } = this.state
     const { handleInformation } = this.props;
+
+    const setPhoneNumber = (newPhone: Array<string>) => {
+      this.setState({phoneNumber: newPhone})
+    }
 
     const inputObjArr = [
       {
@@ -40,24 +44,32 @@ export class ClassForm extends Component<{
         placeHolder: "Bilbo",
         errorMessage: firstNameErrorMessage,
         value: firstName,
+        key: 'firstName',
+        isValid: firstName.length >= 2
       },
       {
         label: "Last Name",
         placeHolder: "Baggins",
         errorMessage: lastNameErrorMessage,
         value: lastName,
+        key: 'lastName',
+        isValid: lastName.length >= 2
       },
       {
         label: "Email",
         placeHolder: "bilbo-baggins@adventurehobbits.net",
         errorMessage: emailErrorMessage,
         value: email,
+        key: 'email',
+        isValid: isEmailValid(email)
       },
       {
         label: "City",
         placeHolder: "Hobbiton",
         errorMessage: cityErrorMessage,
         value: city,
+        key: 'city',
+        isValid: isValidCity(city)
       },
     ];
 
@@ -73,19 +85,15 @@ export class ClassForm extends Component<{
             city: capitalize(city),
             phone: formatPhoneNumber(phoneNumber),
           };
-          if (isAllValid(allInfo)) {
-            handleInformation(allInfo);
-            this.setState({
-              firstName: "",
-              lastName: "",
-              email: "",
-              city: "",
-              phoneNumber: ["", "", "", ""],
-              hasSubmitted: false,
-            });
-          } else {
+          if (!isAllValid(allInfo)) {
             alert("bad data input");
+            return
           }
+          handleInformation(allInfo);
+            this.setState({
+              formInfo: defaultBlankForm,
+              hasSubmitted: false
+            })
         }}
       >
         <u>
@@ -96,25 +104,11 @@ export class ClassForm extends Component<{
           <ClassTextInput
             key={input.label.toLowerCase()}
             label={input.label}
+            isValid={input.isValid}
             inputProps={{
               placeholder: input.placeHolder,
               onChange: (e) => {
-                switch (input.label) {
-                  case "First Name":
-                    this.setState({ firstName: e.currentTarget.value });
-                    break;
-                  case "Last Name":
-                    this.setState({ lastName: e.currentTarget.value });
-                    break;
-                  case "Email":
-                    this.setState({ email: e.currentTarget.value });
-                    break;
-                  case "City":
-                    this.setState({ city: e.currentTarget.value });
-                    break;
-                  default:
-                    break;
-                }
+                this.setState({[input.key]: e.currentTarget.value})
               },
               value: input.value,
               list: input.label === "City" ? "cities" : "",
@@ -126,9 +120,7 @@ export class ClassForm extends Component<{
 
         <ClassPhoneInput
           phoneArr={phoneNumber}
-          handlePhoneArr={(phoneNumber) =>
-            this.setState({ phoneNumber: phoneNumber })
-          }
+          handlePhoneArr={setPhoneNumber}
           error={phoneNumberErrorMessage}
           submitted={hasSubmitted}
           label="Phone"
